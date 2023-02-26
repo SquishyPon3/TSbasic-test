@@ -42,8 +42,6 @@ export class PonyLister extends React.Component<{},PonyListerState>
         }
     }
 
-    mounted: boolean = false;
-
     render()
     {
         return (
@@ -52,13 +50,14 @@ export class PonyLister extends React.Component<{},PonyListerState>
                     "Pony Name: ", editableInputTypes.text,
                     this.UpdateCurrentPonyName)}
                 <p>
-                    Pony Kind: {this.CreateDropdown(
-                    ["Earth", "Unicorn", "Pegasus"], 
-                    this.UpdateCurrentPonyKind)}
+                    Pony Kind: {
+                    this.CreateDropdown(
+                        ["Earth", "Unicorn", "Pegasus"], 
+                        this.UpdateCurrentPonyKind)}
                 </p>
                     
                 <button onClick={this.AddToList}>Add Pony</button>
-                {this.GetPonyList()}
+                {this.CreatePonyList()}
             </div>
         );
     }
@@ -77,7 +76,6 @@ export class PonyLister extends React.Component<{},PonyListerState>
 
     UpdateCurrentPonyKind = (event: React.ChangeEvent<HTMLInputElement>) =>
     {
-        console.log("here");
         if (event.currentTarget.value != null)
         {
             const newPonyKind = event.currentTarget.value as Kind;
@@ -143,13 +141,18 @@ export class PonyLister extends React.Component<{},PonyListerState>
         )
     }
 
-    GetPonyList()
+    CreatePonyList()
     {
         return (
             this.state._ponyList.map((pony,index) => {
                 return (
-                    <p 
+                    <p                         
                         key={pony.name + " " + index}>
+                        
+                        <img 
+                            width="50px"
+                            src="/home-page/default-image.jpg" 
+                            alt="Profile Pic"/>
                         {pony.name}: {pony.kind}
                         <button 
                             // Putting () => fixes this, so silly
