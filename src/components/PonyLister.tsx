@@ -80,12 +80,9 @@ export class PonyLister extends React.Component<{},PonyListerState>
         {
             const newPonyKind = event.currentTarget.value as Kind;
 
-            if (newPonyKind as Kind)
-            {
-                this.setState(
-                    {_currentPonyKind: newPonyKind}
-                )
-            }
+            this.setState(
+                {_currentPonyKind: newPonyKind}
+            )
         }
     }
 
@@ -97,8 +94,8 @@ export class PonyLister extends React.Component<{},PonyListerState>
                 options.map((name, index) => 
                 {
                     return (
-                        <option value={name}> 
-                            {name}
+                        <option key={"option: " + name + " "+ index} 
+                            value={name}> {name}
                         </option>
                     )
                 })
@@ -107,7 +104,7 @@ export class PonyLister extends React.Component<{},PonyListerState>
 
         return(
             <label htmlFor="">
-                <select onChange={funcOnChange}                      
+                <select onChange={funcOnChange}
                     name="" id=""> {createOption()}
                 </select>
             </label>
