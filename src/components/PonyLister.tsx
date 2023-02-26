@@ -2,17 +2,20 @@ import { typeImplementation } from '@testing-library/user-event/dist/type/typeIm
 import { editableInputTypes } from '@testing-library/user-event/dist/utils';
 import { relative } from 'path';
 import React, { ChangeEvent, ChangeEventHandler, HtmlHTMLAttributes, HTMLInputTypeAttribute, MouseEventHandler, useState } from 'react';
+import { IndexKind } from 'typescript';
 type PonyListerState = {
     _currentPonyName: string,
-    _currentPonyKind: "Earth" | "Unicorn" | "Pegasus",
+    _currentPonyKind: Kind,
     _ponyList: Pony[]
 }
 
 type Pony =
 {
     name: string,
-    kind: "Earth" | "Unicorn" | "Pegasus"  
+    kind: Kind
 }
+
+type Kind = "Earth" | "Unicorn" | "Pegasus"  
 
 export class PonyLister extends React.Component<{},PonyListerState>
 {  
@@ -48,11 +51,11 @@ export class PonyLister extends React.Component<{},PonyListerState>
                 {this.CreateInputField("Pony Name", 
                     "Pony Name: ", editableInputTypes.text,
                     this.UpdateCurrentPonyName)}
-                {this.CreateInputField("Pony Kind", 
-                    "Pony Kind: ", editableInputTypes.text, 
-                    this.UpdateCurrentPonyKind, "Earth")}
-                <p>Pony Kind: {this.CreateDropdown(
-                    ["Earth", "Unicorn", "Pegasus"])}</p>
+                <p>
+                    Pony Kind: {this.CreateDropdown(
+                    ["Earth", "Unicorn", "Pegasus"], 
+                    this.UpdateCurrentPonyKind)}
+                </p>
                     
                 <button onClick={this.AddToList}>Add Pony</button>
                 {this.GetPonyList()}
@@ -69,42 +72,35 @@ export class PonyLister extends React.Component<{},PonyListerState>
             this.setState(
                 {_currentPonyName: newPonyName}
             )
-
-            console.log(newPonyName);
         }
     }
 
     UpdateCurrentPonyKind = (event: React.ChangeEvent<HTMLInputElement>) =>
     {
-        const inputPonyKind = event.currentTarget.value; 
-
-        if (inputPonyKind != null)
+        console.log("here");
+        if (event.currentTarget.value != null)
         {
-            if (inputPonyKind === "Earth" ||
-                inputPonyKind === "Unicorn" ||
-                inputPonyKind === "Pegasus")
+            const newPonyKind = event.currentTarget.value as Kind;
+
+            if (newPonyKind as Kind)
             {
                 this.setState(
-                    {_currentPonyKind: inputPonyKind}
+                    {_currentPonyKind: newPonyKind}
                 )
-                
-                console.log(inputPonyKind);
             }
-
-            return;
         }
     }
 
-    CreateDropdown(options: string[])
+    CreateDropdown(options: string[], funcOnChange: ChangeEventHandler)
     {
         function createOption()
         {
             return (
-                options.map((value, index) => 
+                options.map((name, index) => 
                 {
                     return (
-                        <option value=""> 
-                            {value}
+                        <option value={name}> 
+                            {name}
                         </option>
                     )
                 })
@@ -113,8 +109,8 @@ export class PonyLister extends React.Component<{},PonyListerState>
 
         return(
             <label htmlFor="">
-                <select name="" id="">
-                    {createOption()}
+                <select onChange={funcOnChange}                      
+                    name="" id=""> {createOption()}
                 </select>
             </label>
         )
@@ -152,7 +148,8 @@ export class PonyLister extends React.Component<{},PonyListerState>
         return (
             this.state._ponyList.map((pony,index) => {
                 return (
-                    <p key={pony.name + " " + index}>
+                    <p 
+                        key={pony.name + " " + index}>
                         {pony.name}: {pony.kind}
                         <button 
                             // Putting () => fixes this, so silly
