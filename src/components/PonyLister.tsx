@@ -23,17 +23,20 @@ export class PonyLister extends React.Component<{},PonyListerState>
     {
         super(props)
 
-        const AppleJack: Pony = {
+        const AppleJack: Pony = 
+        {
             name: "Applejack",
             kind: "Earth"
         }
     
-        const Rarity: Pony = {
+        const Rarity: Pony = 
+        {
             name: "Rarity",
             kind: "Unicorn"
         }
 
-        this.state = {
+        this.state = 
+        {
             _currentPonyName: "",
             _currentPonyKind: "Earth",
             _ponyList: [   
